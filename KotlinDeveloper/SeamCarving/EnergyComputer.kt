@@ -11,23 +11,20 @@ class EnergyComputer(private val img: BufferedImage) {
     fun compute() : Energies {
         val result = Array(img.height) { DoubleArray(img.width)}
 
-        for (imgY in 0 until img.height) {
-            for (imgX in 0 until img.width) {
-                val xWithOffset = if (imgX == 0) 1 else if (imgX == img.width - 1) imgX - 1 else imgX
-                val yWithOffset = if (imgY == 0) 1 else if (imgY == img.height - 1) imgY - 1 else imgY
+        for (row in 0 until img.height) {
+            for (col in 0 until img.width) {
+                val colWithOffset = if (col == 0) 1 else if (col == img.width - 1) col - 1 else col
+                val rowWithOffset = if (row == 0) 1 else if (row == img.height - 1) row - 1 else row
 
-                val xM1 = Color(img.getRGB(xWithOffset - 1, imgY))
-                val xP1 = Color(img.getRGB(xWithOffset + 1, imgY))
+                val rowM1 = Color(img.getRGB(col, rowWithOffset - 1))
+                val rowP1 = Color(img.getRGB(col, rowWithOffset + 1))
 
-                val yM1 = Color(img.getRGB(imgX, yWithOffset - 1))
-                val yP1 = Color(img.getRGB(imgX, yWithOffset + 1))
+                val colM1 = Color(img.getRGB(colWithOffset - 1, row))
+                val colP1 = Color(img.getRGB(colWithOffset + 1, row))
 
-                val energy = sqrt(squaredGradient(xP1, xM1) + squaredGradient(yP1, yM1))
+                val energy = sqrt(squaredGradient(rowP1, rowM1) + squaredGradient(colP1, colM1))
 
-                val arrayX = imgY
-                val arrayY = imgX
-
-                result[arrayX][arrayY] = energy
+                result[row][col] = energy
             }
         }
 

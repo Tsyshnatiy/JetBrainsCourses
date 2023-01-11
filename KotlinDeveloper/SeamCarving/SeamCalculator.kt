@@ -1,8 +1,8 @@
 package seamcarving
 
-data class Pixel(val x: Int, val y: Int)
+data class Cell(val row: Int, val col: Int)
 
-typealias Seam = Array<Pixel>
+typealias Seam = List<Cell>
 
 class SeamCalculator(private val energies: Energies) {
 
@@ -10,63 +10,52 @@ class SeamCalculator(private val energies: Energies) {
         val h = energies.size
         val w = energies[0].size
 
-        val arrows = Array(h) { Array(w) { Pixel(0, 0) } }
-
-        val cumulativeEnergies = Array(h) {
-            val filler = DoubleArray(w)
-            filler.fill(Double.POSITIVE_INFINITY)
-            filler
+        val arrows = Array(h) { Array(w) { Cell(0, 0) } }
+        for (j in arrows[0].indices) {
+            arrows[0][j] = Cell(0, j)
         }
-        cumulativeEnergies[cumulativeEnergies.lastIndex] = energies.last().clone()
 
-        for (row in cumulativeEnergies.lastIndex - 2 downTo 0) {
-            for (col in cumulativeEnergies[row].indices) {
-                var cumEnergyValue = cumulativeEnergies[row][col]
-                var arrow = Pixel(0, 0)
-                if (col > 0) {
-                    val left = cumulativeEnergies[row + 1][col - 1]
-                    cumEnergyValue = cumEnergyValue.coerceAtMost(left)
-                    arrow = Pixel(row + 1, col - 1)
-                    arrows[row][col] = arrow
-                }
+        val cumulativeEnergies = Array(h) { DoubleArray(w) }
+        cumulativeEnergies[0] = energies.first()
 
-                if (col < w - 1) {
-                    val right = cumulativeEnergies[row + 1][col + 1]
-                    cumEnergyValue = cumEnergyValue.coerceAtMost(right)
-                    arrow = Pixel(row + 1, col + 1)
-                    arrows[row][col] = arrow
-                }
+        for (row in 1 until h) {
+            for (col in 0 until w) {
+                var cumEnergyValue = Double.POSITIVE_INFINITY
 
+                val candidates = arrayOf(Cell(row - 1, col),
+                                                    Cell(row - 1, col - 1),
+                                                    Cell(row - 1, col + 1))
 
-                val central = cumulativeEnergies[row + 1][col]
-                cumEnergyValue = cumEnergyValue.coerceAtMost(central)
+                for (c in candidates) {
+                    if (c.col < 0 || c.col >= w) {
+                        continue
+                    }
 
-                if (cumEnergyValue.compareTo(central) == 0) {
-                    arrow = Pixel(row, col)
+                    val potentialCumEnergy = cumulativeEnergies[c.row][c.col] + energies[row][col]
+                    if (cumEnergyValue > potentialCumEnergy) {
+                        cumEnergyValue = potentialCumEnergy
+                        arrows[row][col] = Cell(c.row, c.col)
+                    }
                 }
 
                 cumulativeEnergies[row][col] = cumEnergyValue
-                arrows[row][col] = arrow
             }
         }
 
         return computeSeam(cumulativeEnergies, arrows)
     }
 
-    private fun computeSeam(cumEnergies: Energies, arrows: Array<Array<Pixel>>) : Seam {
-        val result = Array(cumEnergies.size) { Pixel(0, 0) }
-        val firstLineMin = cumEnergies[0].minOf { it }
-        val firstLineMinIndex = cumEnergies[0].indexOfFirst { it.compareTo(firstLineMin) == 0 }
+    private fun computeSeam(cumEnergies: Energies, arrows: Array<Array<Cell>>) : Seam {
+        val result = mutableListOf<Cell>()
+        val lastLineMin = cumEnergies.last().reduce { a, b -> a.coerceAtMost(b) }
+        val lastLineMinIndex = cumEnergies.last().indexOfFirst { it.compareTo(lastLineMin) == 0 }
 
-        result[0] = Pixel(0, firstLineMinIndex)
+        val h = cumEnergies.size
+        result.add(Cell(h - 1, lastLineMinIndex))
 
-        val h = arrows.size
-        val w = arrows[0].size
-
-        for (row in 1 until h) {
-            for (col in 0 until w) {
-                result[row] = arrows[row][col]
-            }
+        for (row in h - 2 downTo 0) {
+            val p = result.last()
+            result.add(arrows[p.row][p.col])
         }
 
         return result
