@@ -4,7 +4,7 @@ data class Cell(val row: Int, val col: Int)
 
 typealias Seam = List<Cell>
 
-class SeamCalculator(private val energies: Energies) {
+class VerticalSeamCalculator(private val energies: Energies) {
 
     fun calculate() : Seam {
         val h = energies.size
