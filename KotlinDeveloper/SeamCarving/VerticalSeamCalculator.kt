@@ -2,7 +2,7 @@ package seamcarving
 
 data class Cell(val row: Int, val col: Int)
 
-typealias Seam = List<Cell>
+typealias Seam = HashSet<Cell>
 
 class VerticalSeamCalculator(private val energies: Energies) {
 
@@ -46,16 +46,20 @@ class VerticalSeamCalculator(private val energies: Energies) {
     }
 
     private fun computeSeam(cumEnergies: Energies, arrows: Array<Array<Cell>>) : Seam {
-        val result = mutableListOf<Cell>()
+        val result = HashSet<Cell>()
         val lastLineMin = cumEnergies.last().reduce { a, b -> a.coerceAtMost(b) }
         val lastLineMinIndex = cumEnergies.last().indexOfFirst { it.compareTo(lastLineMin) == 0 }
 
         val h = cumEnergies.size
         result.add(Cell(h - 1, lastLineMinIndex))
+        var lastArrow = result.last()
 
         for (row in h - 2 downTo 0) {
-            val p = result.last()
-            result.add(arrows[p.row][p.col])
+            val p = lastArrow
+
+            val nextArrow = arrows[p.row][p.col]
+            result.add(nextArrow)
+            lastArrow = nextArrow
         }
 
         return result
