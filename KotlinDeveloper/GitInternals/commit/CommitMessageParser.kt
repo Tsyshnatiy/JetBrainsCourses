@@ -1,10 +1,10 @@
-package gitinternals
+package gitinternals.commit
 
 import java.lang.StringBuilder
 import java.text.ParseException
 
-class CommitMessageParser: IProcessor {
-    override fun process(bytes:ByteArray): String {
+class CommitMessageParser {
+    fun parse(bytes:ByteArray): String {
         val body = String(bytes).lines()
         if (body.isEmpty()) {
             throw ParseException("Content of an object is damaged", 0)

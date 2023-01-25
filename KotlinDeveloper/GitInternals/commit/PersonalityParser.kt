@@ -1,15 +1,13 @@
-package gitinternals
+package gitinternals.commit
 
 import java.text.ParseException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 object PersonalityParser {
     data class Result(val name: String,
                       val email: String,
-                      val formattedDate: String,
-                      val timezone: String)
+                      val datetime: LocalDateTime)
 
     fun parse(line: String) : Result {
         val lines = line.split(' ')
@@ -25,9 +23,7 @@ object PersonalityParser {
         val offset = ZoneOffset.of(timezone)
         val datetime = LocalDateTime.ofEpochSecond(timestamp.toLong(), 0, offset)
 
-        val formatted = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(datetime)
-
-        return Result(name, email, formatted, timezone)
+        return Result(name, email, datetime)
     }
 
     private fun getNormalizedTimezone(timezone: String): String {

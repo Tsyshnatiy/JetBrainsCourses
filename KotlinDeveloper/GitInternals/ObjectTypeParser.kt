@@ -11,7 +11,7 @@ enum class Type {
 class TypeParser {
     data class Result(val type: Type, val parsed: String);
 
-    fun process(body: List<String>): Result {
+    fun parse(body: List<String>): Result {
         val firstLine = body[0].lowercase()
         if (firstLine.contains("blob")) {
             return Result(Type.BLOB, "*BLOB*")

@@ -1,10 +1,9 @@
-package gitinternals
+package gitinternals.commit
 
-import java.lang.StringBuilder
 import java.text.ParseException
 
-class CommitTreeParser: IProcessor {
-    override fun process(bytes: ByteArray): String {
+class CommitTreeParser {
+    fun parse(bytes: ByteArray): String {
         val body = String(bytes).lines()
         if (body.isEmpty()) {
             throw ParseException("Content of an object is damaged", 0)
@@ -20,7 +19,6 @@ class CommitTreeParser: IProcessor {
             throw ParseException("Tree line has wrong format", 0)
         }
 
-        val hash = parts[1]
-        return StringBuilder().append("tree: ", hash, System.lineSeparator()).toString()
+        return parts[1]
     }
 }

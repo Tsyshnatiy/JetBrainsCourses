@@ -1,6 +1,5 @@
-package gitinternals
+package gitinternals.tree
 
-import java.lang.StringBuilder
 import java.text.ParseException
 
 fun ByteArray.indexOf(b: Byte, start: Int): Int {
@@ -13,9 +12,9 @@ fun ByteArray.indexOf(b: Byte, start: Int): Int {
     return -1
 }
 
-class TreeObjectParser: IProcessor {
-    override fun process(bytes: ByteArray): String {
-        val result = StringBuilder()
+class TreeObjectParser {
+    fun parse(bytes: ByteArray): List<Tree> {
+        val result = mutableListOf<Tree>()
 
         var index = 0
         while (index < bytes.size) {
@@ -32,9 +31,9 @@ class TreeObjectParser: IProcessor {
             val hash = getHash(index, bytes)
             index += 20 // sha1Length
 
-            result.append(permissions, " ", hash, " ", filename, System.lineSeparator())
+            result.add(Tree(filename, permissions, hash))
         }
-        return result.toString()
+        return result
     }
 
     private fun getPermissions(start: Int, bytes: ByteArray): ByteArray {

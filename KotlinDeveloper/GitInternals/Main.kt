@@ -14,7 +14,7 @@ fun catFile(pathToGit: String) {
             firstTwoDigits + File.separator +
             last38Digits
 
-    val blobProcessors = listOf(BlobBodyReader())
+    val blobProcessors = listOf(BlobParser())
 
     val commitProcessors = listOf(CommitTreeParser(),
         ParentsParser(),
@@ -34,8 +34,8 @@ fun catFile(pathToGit: String) {
 
 fun main() {
     println("Enter .git directory location:")
-    //val pathToGit = "C:\\Users\\Vlad\\IdeaProjects\\Git Internals\\Git Internals\\task\\test\\gitone"
-    val pathToGit = readln()
+    val pathToGit = "C:\\Users\\Vlad\\IdeaProjects\\Git Internals\\Git Internals\\task\\test\\gitone"
+    //val pathToGit = readln()
 
     println("Enter command:")
 
