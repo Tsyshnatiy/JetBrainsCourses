@@ -37,6 +37,9 @@ class ProcessingChain(private val typeParser: TypeParser,
             result.append(s)
         }
 
+        iis.close()
+        fis.close()
+
         return result.toString()
     }
 }
