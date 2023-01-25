@@ -14,7 +14,7 @@ class ProcessingChain(private val typeParser: TypeParser,
         val fis = FileInputStream(path)
         val iis = InflaterInputStream(fis)
         val bytes = iis.readAllBytes()
-        println(String(bytes))
+
         val indexOfZeroByte = bytes.indexOf(0.toByte())
         if (indexOfZeroByte == -1) {
             throw ParseException("Unable to find type and length", 0)

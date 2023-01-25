@@ -29,10 +29,10 @@ class TreeObjectParser: IProcessor {
 
             index += filenameBytes.size + 1 // +1 - skip zero byte itself
 
-            val sha120Bytes = bytes.copyOfRange(index, index + 20)
-            index += sha120Bytes.size
+            val hash = getHash(index, bytes)
+            index += 20 // sha1Length
 
-            result.append(permissions, " ", filename)
+            result.append(permissions, " ", hash, " ", filename, System.lineSeparator())
         }
         return result.toString()
     }
@@ -55,5 +55,11 @@ class TreeObjectParser: IProcessor {
         }
 
         return bytes.copyOfRange(start, nextZeroByte)
+    }
+
+    private fun getHash(start: Int, bytes: ByteArray): String {
+        val sha1Length = 20
+        val sha1Bytes = bytes.copyOfRange(start, start + sha1Length)
+        return sha1Bytes.joinToString("") { String.format("%02X", it).lowercase() }
     }
 }
