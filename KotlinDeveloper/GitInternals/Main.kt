@@ -1,18 +1,15 @@
 package gitinternals
 
 import java.io.File
-import java.io.FileInputStream
-import java.text.ParseException
-import java.util.zip.InflaterInputStream
 
 fun main() {
     println("Enter .git directory location:")
-    //val pathToGit = "C:\\Users\\Vlad\\IdeaProjects\\Git Internals\\Git Internals\\task\\test\\gitone"//readln()
-    val pathToGit = readln()
+    val pathToGit = "C:\\Users\\Vlad\\IdeaProjects\\Git Internals\\Git Internals\\task\\test\\gitone"
+    //val pathToGit = readln()
 
     println("Enter git object hash:")
-    val hash = readln()
-
+    //val hash = readln()
+    val hash = "109e8050b41bd10b81be0a51a5e67327f5609551"
     val firstTwoDigits = hash.substring(0 until 2)
     val last38Digits = hash.substring(2)
 
@@ -21,24 +18,20 @@ fun main() {
                     firstTwoDigits + File.separator +
                     last38Digits
 
-    val fis = FileInputStream(path)
-    val iis = InflaterInputStream(fis)
-    val bytes = iis.readAllBytes()
+    val blobProcessors = listOf(BlobBodyReader())
 
-    val zeroByte: Byte = 0
-    val firstZeroByteIndex = bytes.indexOfFirst { it == zeroByte }
-    if (firstZeroByteIndex == -1) {
-        throw ParseException("Could not find zero byte in the object header", 0)
-    }
+    val commitProcessors = listOf(CommitTreeParser(),
+        ParentsParser(),
+        AuthorParser(),
+        CommitterParser(),
+        CommitMessageParser())
 
-    val usefulBytes = bytes.copyOfRange(0, firstZeroByteIndex)
-    val typeAndLength = String(usefulBytes).split(' ')
-    if (typeAndLength.size != 2) {
-        throw RuntimeException("object type was not parsed successfully")
-    }
+    val treeProcessors = listOf(TreeObjectParser())
 
-    val type = typeAndLength[0]
-    val length = typeAndLength[1]
+    val chain = ProcessingChain(TypeParser(),
+        commitProcessors,
+        blobProcessors,
+        treeProcessors)
 
-    println("type:$type length:$length")
+    println(chain.process(path))
 }
