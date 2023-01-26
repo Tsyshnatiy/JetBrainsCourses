@@ -1,44 +1,41 @@
-package gitinternals
+package gitinternals.branch
 
 import java.io.File
 import java.io.FileNotFoundException
-import java.lang.StringBuilder
 import java.text.ParseException
 
-class ListBranches(private val pathToGit: String) {
-    fun list(): String {
-        val branches = getBranches()
-        if (branches.isEmpty()) {
-            throw ParseException("Could not parse branches files", 0)
-        }
-        val headBranchName = getHeadBranch()
-
-        val result = StringBuilder()
-
-        for (branch in branches) {
-            if (branch == headBranchName) {
-                result.append("* ")
-            }
-            else {
-                result.append("  ")
-            }
-
-            result.append(branch, System.lineSeparator())
-        }
-
-        return result.toString()
+class BranchParser(private val pathToGit: String) {
+    fun parse(): List<Branch> {
+        val branchesAndHeads = getBranches()
+        val currentBranch = getHeadBranch()
+        return branchesAndHeads.map { Branch(it.first, it.second, it.first == currentBranch) }
     }
 
-    private fun getBranches(): List<String> {
+    private fun getBranches(): List<Pair<String, String>> {
         val branchHeadsPath = pathToGit + File.separator +
-                "refs" +  File.separator +
+                "refs" + File.separator +
                 "heads"
         val branchHeadsDir = File(branchHeadsPath)
         if (!branchHeadsDir.exists() || !branchHeadsDir.isDirectory) {
             throw FileNotFoundException("$branchHeadsPath not found")
         }
 
-        return branchHeadsDir.list()?.sorted() ?: emptyList()
+        val branchNames = branchHeadsDir.list()
+        if (branchNames == null || branchNames.isEmpty()) {
+            throw IllegalStateException("Git repo has no branches")
+        }
+
+        val sortedBranchNames = branchNames.sorted()
+        val heads = sortedBranchNames.map {
+            val branchFile = File(branchHeadsPath + File.separator + it)
+            if (!branchFile.exists()) {
+                throw IllegalStateException("Branch file $it does not exist")
+            }
+
+            branchFile.readText()
+        }
+
+        return sortedBranchNames.zip(heads)
     }
 
     private fun getHeadBranch(): String {

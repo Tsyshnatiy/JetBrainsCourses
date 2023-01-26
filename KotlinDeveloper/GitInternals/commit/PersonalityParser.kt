@@ -7,7 +7,8 @@ import java.time.ZoneOffset
 object PersonalityParser {
     data class Result(val name: String,
                       val email: String,
-                      val datetime: LocalDateTime)
+                      val datetime: LocalDateTime,
+                      val timeZone: String)
 
     fun parse(line: String) : Result {
         val lines = line.split(' ')
@@ -23,7 +24,7 @@ object PersonalityParser {
         val offset = ZoneOffset.of(timezone)
         val datetime = LocalDateTime.ofEpochSecond(timestamp.toLong(), 0, offset)
 
-        return Result(name, email, datetime)
+        return Result(name, email, datetime, timezone)
     }
 
     private fun getNormalizedTimezone(timezone: String): String {

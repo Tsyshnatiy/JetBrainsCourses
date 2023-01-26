@@ -13,9 +13,8 @@ fun ByteArray.indexOf(b: Byte, start: Int): Int {
 }
 
 class TreeObjectParser {
-    fun parse(bytes: ByteArray): List<Tree> {
-        val result = mutableListOf<Tree>()
-
+    fun parse(bytes: ByteArray, objectHash: String): Tree {
+        val entries = mutableListOf<TreeEntry>()
         var index = 0
         while (index < bytes.size) {
             val permissionsBytes = getPermissions(index, bytes)
@@ -31,9 +30,9 @@ class TreeObjectParser {
             val hash = getHash(index, bytes)
             index += 20 // sha1Length
 
-            result.add(Tree(filename, permissions, hash))
+            entries.add(TreeEntry(filename, permissions, hash))
         }
-        return result
+        return Tree(objectHash, entries)
     }
 
     private fun getPermissions(start: Int, bytes: ByteArray): ByteArray {
