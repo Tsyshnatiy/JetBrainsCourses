@@ -2,6 +2,7 @@ package gitinternals
 
 import gitinternals.branch.BranchParser
 import gitinternals.commands.CatFile
+import gitinternals.commands.CommitTree
 import gitinternals.commands.ListBranches
 import gitinternals.commands.Log
 
@@ -13,7 +14,6 @@ fun toGitObjects(parsed: ObjectReader.ParsedGitObjects): GitObjects {
 
 fun main() {
     println("Enter .git directory location:")
-    //val pathToGit = "C:\\Users\\Vlad\\IdeaProjects\\Git Internals\\Git Internals\\task\\test\\gitone"
     val pathToGit = readln()
 
     val branches = BranchParser(pathToGit).parse()
@@ -25,14 +25,17 @@ fun main() {
         "cat-file" -> {
             println("Enter git object hash:")
             val hash = readln()
-            //val hash = "109e8050b41bd10b81be0a51a5e67327f5609551"
             CatFile(objects).execute(hash)
         }
         "log" -> {
             println("Enter branch name:")
             val branchName = readln()
-            //val branchName = "master"
             Log(branches, objects, branchName).execute()
+        }
+        "commit-tree" -> {
+            println("Enter commit-hash:")
+            val commitHash = readln()
+            CommitTree(objects).execute(commitHash)
         }
         else -> throw IllegalArgumentException("Invalid command")
     }
