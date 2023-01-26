@@ -4,14 +4,19 @@ import gitinternals.branch.BranchParser
 import gitinternals.commands.CatFile
 import gitinternals.commands.ListBranches
 
+fun toGitObjects(parsed: ObjectReader.ParsedGitObjects): GitObjects {
+    return GitObjects(toHashedStorage(parsed.trees),
+                        toHashedStorage(parsed.commits),
+                        toHashedStorage(parsed.blobs))
+                }
+
 fun main() {
     println("Enter .git directory location:")
     val pathToGit = "C:\\Users\\Vlad\\IdeaProjects\\Git Internals\\Git Internals\\task\\test\\gitone"
     //val pathToGit = readln()
 
     val branches = BranchParser(pathToGit).parse()
-    val objects = ObjectReader(pathToGit).read()
-
+    val objects = toGitObjects(ObjectReader(pathToGit).read())
     println("Enter command:")
 
     when(readln().lowercase()) {

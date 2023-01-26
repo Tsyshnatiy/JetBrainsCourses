@@ -12,7 +12,11 @@ import java.text.ParseException
 import java.util.zip.InflaterInputStream
 
 class ObjectReader(private val pathToGit: String) {
-    fun read(): GitObjects {
+    data class ParsedGitObjects(val trees: List<Tree>,
+                                val commits: List<Commit>,
+                                val blobs: List<Blob>)
+
+    fun read(): ParsedGitObjects {
         val blobs = mutableListOf<Blob>()
         val commits = mutableListOf<Commit>()
         val trees = mutableListOf<Tree>()
@@ -57,7 +61,7 @@ class ObjectReader(private val pathToGit: String) {
             }
         }
 
-        return GitObjects(trees, commits, blobs)
+        return ParsedGitObjects(trees, commits, blobs)
     }
 
     private fun getHeader(bytes: ByteArray) : ByteArray {

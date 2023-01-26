@@ -8,23 +8,26 @@ import gitinternals.commands.serializers.TreeSerializer
 class CatFile(private val gitObjects: GitObjects) {
     fun execute(hash: String) {
         // TODO Parallel search
-        for (tree in gitObjects.trees) {
-            if (tree.treeHash == hash) {
-                println(TreeSerializer(tree).serialize())
+        for (treeHash in gitObjects.trees.hashes) {
+            if (treeHash == hash) {
+                val tree = gitObjects.trees.objects[treeHash]
+                println(TreeSerializer(tree!!).serialize())
                 return
             }
         }
 
-        for (commit in gitObjects.commits) {
-            if (commit.hash == hash) {
-                println(CommitSerializer(commit).serialize())
+        for (commitHash in gitObjects.commits.hashes) {
+            if (commitHash == hash) {
+                val commit = gitObjects.commits.objects[commitHash]
+                println(CommitSerializer(commit!!).serialize())
                 return
             }
         }
 
-        for (blob in gitObjects.blobs) {
-            if (blob.hash == hash) {
-                println(BlobSerializer(blob).serialize())
+        for (blobHash in gitObjects.blobs.hashes) {
+            if (blobHash == hash) {
+                val blob = gitObjects.blobs.objects[blobHash]
+                println(BlobSerializer(blob!!).serialize())
                 return
             }
         }

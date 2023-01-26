@@ -1,3 +1,9 @@
 package gitinternals.blob
 
-data class Blob(val body: String, val hash: String)
+import gitinternals.GitObject
+
+data class Blob(val body: String, val hash: String) : GitObject {
+    override fun getObjectHash(): String {
+        return hash
+    }
+}
