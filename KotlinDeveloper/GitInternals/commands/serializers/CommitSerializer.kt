@@ -32,6 +32,7 @@ class CommitSerializer(private val commit: Commit) {
         }
         result.append(author, System.lineSeparator())
         result.append(committer, System.lineSeparator())
+        result.append("commit message:", System.lineSeparator())
         result.append(commit.message)
 
         return result.toString()

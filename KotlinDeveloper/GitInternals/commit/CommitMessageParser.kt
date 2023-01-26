@@ -15,8 +15,6 @@ class CommitMessageParser {
             throw ParseException("Unable to find commit message", 0)
         }
         val result = StringBuilder()
-        result.append("commit message:", System.lineSeparator())
-
         emptyIndex++
         var messageLine = body[emptyIndex]
 

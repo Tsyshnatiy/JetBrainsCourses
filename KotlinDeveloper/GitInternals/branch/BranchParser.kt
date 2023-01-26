@@ -32,7 +32,7 @@ class BranchParser(private val pathToGit: String) {
                 throw IllegalStateException("Branch file $it does not exist")
             }
 
-            branchFile.readText()
+            branchFile.readText().dropLast(1) // drop newline
         }
 
         return sortedBranchNames.zip(heads)
