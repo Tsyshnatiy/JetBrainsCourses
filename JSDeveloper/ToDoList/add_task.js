@@ -16,6 +16,7 @@ function onAddTask() {
 
     const checkBox = document.createElement("input")
     checkBox.setAttribute("type", "checkbox")
+    checkBox.setAttribute("onclick", "onTaskStateChange(this)")
 
     const spacing = document.createElement("div")
     spacing.setAttribute("class", "task-spacing")
