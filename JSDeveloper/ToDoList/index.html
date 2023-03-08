@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
     <title id="title">To-Do List</title>
-    <script src="add_task.js" type="text/javascript"></script>
-    <script src="remove_task.js" type="text/javascript"></script>
-    <script src="task_state_change.js" type="text/javascript"></script>
+    <script src="tasks.js" type="text/javascript"></script>
 </head>
-<body>
+<body onload="return beforeLoad()">
 <div class="flex-container">
     <div class="left_area"></div>
     <div class="center_area">
@@ -18,24 +16,6 @@
         </div>
         <div class="tasks_area">
             <ul id="task-list">
-                <li class="task-list-item">
-                    <input type="checkbox" class="task-checkbox" onclick="onTaskStateChange(this)"/>
-                    <span class="task"> Text </span>
-                    <div class="task-spacing"></div>
-                    <button class="delete-btn" onclick="onRemoveTask(this)"></button>
-                </li>
-                <li class="task-list-item">
-                    <input type="checkbox" class="task-checkbox" onclick="onTaskStateChange(this)"/>
-                    <span class="task"> Text </span>
-                    <div class="task-spacing"></div>
-                    <button class="delete-btn" onclick="onRemoveTask(this)"></button>
-                </li>
-                <li class="task-list-item">
-                    <input type="checkbox" class="task-checkbox" onclick="onTaskStateChange(this)"/>
-                    <span class="task"> Text </span>
-                    <div class="task-spacing"></div>
-                    <button class="delete-btn" onclick="onRemoveTask(this)"></button>
-                </li>
             </ul>
         </div>
     </div>
