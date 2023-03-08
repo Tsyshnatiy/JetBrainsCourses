@@ -17,6 +17,9 @@ function onAddTask() {
     const checkBox = document.createElement("input")
     checkBox.setAttribute("type", "checkbox")
 
+    const spacing = document.createElement("div")
+    spacing.setAttribute("class", "task-spacing")
+
     const span = document.createElement("span")
     span.setAttribute("class", "task")
     span.textContent = taskTextField.value
@@ -27,6 +30,7 @@ function onAddTask() {
 
     newItem.append(checkBox)
     newItem.append(span)
+    newItem.append(spacing)
     newItem.append(button)
 
     taskList.append(newItem)
