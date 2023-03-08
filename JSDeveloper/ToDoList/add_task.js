@@ -12,6 +12,7 @@ function onAddTask() {
     }
 
     const newItem = document.createElement("li")
+    newItem.setAttribute("class", "task-list-item")
 
     const checkBox = document.createElement("input")
     checkBox.setAttribute("type", "checkbox")
@@ -22,6 +23,7 @@ function onAddTask() {
 
     const button = document.createElement("button")
     button.setAttribute("class", "delete-btn")
+    button.setAttribute("onclick", "onRemoveTask(this)")
 
     newItem.append(checkBox)
     newItem.append(span)

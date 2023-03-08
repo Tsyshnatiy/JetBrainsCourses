@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="styles.css">
     <title id="title">To-Do List</title>
     <script src="add_task.js" type="text/javascript"></script>
+    <script src="remove_task.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="flex-container">
@@ -16,20 +17,20 @@
         </div>
         <div class="tasks_area">
             <ul id="task-list">
-                <li>
+                <li class="task-list-item">
                     <input type="checkbox"/>
                     <span class="task"> Text </span>
-                    <button class="delete-btn"></button>
+                    <button class="delete-btn" onclick="onRemoveTask(this)"></button>
                 </li>
-                <li>
+                <li class="task-list-item">
                     <input type="checkbox"/>
                     <span class="task"> Text </span>
-                    <button class="delete-btn"></button>
+                    <button class="delete-btn" onclick="onRemoveTask(this)"></button>
                 </li>
-                <li>
+                <li class="task-list-item">
                     <input type="checkbox"/>
                     <span class="task"> Text </span>
-                    <button class="delete-btn"></button>
+                    <button class="delete-btn" onclick="onRemoveTask(this)"></button>
                 </li>
             </ul>
         </div>
